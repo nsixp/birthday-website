@@ -1,0 +1,943 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Happy Birthday My Love</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --bg-light: #f5f2eb;
+        --bg-dark: #3a1212;
+        --accent-maroon: #5a1818;
+        --accent-light: #f9f6f0;
+        --text-dark: #2c0b0b;
+        --text-light: #f5f2eb;
+        --font-serif: "Times New Roman", Times, serif;
+      }
+
+      /* ── ANIMATIONS ── */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(28px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      @keyframes floatY {
+        0%,
+        100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-12px);
+        }
+      }
+      @keyframes confetti-fall {
+        0% {
+          transform: translateY(-20px) rotate(0deg);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(100vh) rotate(720deg);
+          opacity: 0;
+        }
+      }
+      @keyframes heartbeat {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        14% {
+          transform: scale(1.18);
+        }
+        28% {
+          transform: scale(1);
+        }
+        42% {
+          transform: scale(1.1);
+        }
+        70% {
+          transform: scale(1);
+        }
+      }
+      @keyframes hub-pop {
+        0% {
+          opacity: 0;
+          transform: scale(0.85) translateY(20px);
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1) translateY(0);
+        }
+      }
+
+      body,
+      html {
+        height: 100%;
+        font-family: "Courier New", Courier, monospace;
+        background-color: var(--bg-light);
+        color: var(--text-dark);
+        overflow: hidden;
+      }
+
+      /* ── BACKGROUNDS ── */
+      .bg-pattern-light {
+        background-color: #f7f4ed;
+        background-image:
+          linear-gradient(rgba(90, 24, 24, 0.03) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(90, 24, 24, 0.03) 1px, transparent 1px);
+        background-size: 24px 24px;
+      }
+      .bg-pattern-dark {
+        background-color: #2b0c0c;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+        background-size: 24px 24px;
+      }
+
+      /* ── APP LAYOUT ── */
+      #app {
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
+
+      .screen {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: none;
+        opacity: 0;
+        transition: opacity 0.45s ease;
+        padding: 40px 20px;
+        overflow-y: auto;
+      }
+      .screen.active {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        opacity: 1;
+        z-index: 10;
+      }
+
+      /* ── TYPOGRAPHY ── */
+      .title-handwritten {
+        font-family: "Georgia", serif;
+        font-style: italic;
+        font-size: 44pt;
+        color: var(--accent-maroon);
+        margin-bottom: 15px;
+        font-weight: normal;
+        text-align: center;
+        line-height: 1.2;
+      }
+      .screen.dark .title-handwritten {
+        color: #f9f6f0;
+      }
+
+      .subtitle-italic {
+        font-family: var(--font-serif);
+        font-style: italic;
+        font-size: 16pt;
+        color: #5c4444;
+        margin-bottom: 30px;
+        text-align: center;
+      }
+      .screen.dark .subtitle-italic {
+        color: #ccb0b0;
+      }
+
+      /* ── CAKE IMG (sama seperti asli) ── */
+      .cake-art {
+        width: 100%;
+        max-width: 340px;
+        display: block;
+        margin-bottom: 20px;
+        animation: floatY 4s ease-in-out infinite;
+      }
+
+      /* ── BUTTONS ── */
+      .btn-container {
+        text-align: center;
+        margin-top: 20px;
+        width: 100%;
+      }
+
+      .btn {
+        display: inline-block;
+        background-color: var(--accent-maroon);
+        color: white;
+        padding: 14px 40px;
+        font-family: "Courier New", Courier, monospace;
+        font-size: 14pt;
+        text-decoration: none;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        margin: 10px;
+        box-shadow: 0 4px 15px rgba(90, 24, 24, 0.15);
+        transition:
+          transform 0.2s,
+          background-color 0.2s,
+          box-shadow 0.2s;
+      }
+      .btn:hover {
+        transform: translateY(-2px) scale(1.05);
+        background-color: #420f0f;
+        box-shadow: 0 8px 22px rgba(90, 24, 24, 0.25);
+      }
+      .btn:active {
+        transform: scale(0.97);
+      }
+
+      .btn-back {
+        background-color: transparent;
+        color: var(--accent-maroon);
+        border: 2px solid var(--accent-maroon);
+        box-shadow: none;
+      }
+      .btn-back:hover {
+        background-color: rgba(90, 24, 24, 0.05);
+        box-shadow: none;
+      }
+
+      .screen.dark .btn-back {
+        color: #f9f6f0;
+        border-color: #f9f6f0;
+      }
+      .screen.dark .btn-back:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+
+      /* ── SAD OVERLAY ── */
+      .sad-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: var(--bg-dark);
+        color: var(--text-light);
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 100;
+        padding: 20px;
+        text-align: center;
+      }
+      .sad-emoji {
+        font-size: 60px;
+        display: block;
+        margin-bottom: 20px;
+        animation: heartbeat 2s ease-in-out infinite;
+      }
+
+      /* ── WELCOME LAYOUT ── */
+      .welcome-flex {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 60px;
+        max-width: 950px;
+        width: 100%;
+      }
+      @media (max-width: 768px) {
+        .welcome-flex {
+          flex-direction: column;
+          gap: 30px;
+          text-align: center;
+        }
+        .welcome-flex div {
+          text-align: center !important;
+        }
+      }
+
+      /* ── HUB SCREEN ── */
+      .hub-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        max-width: 560px;
+        width: 100%;
+        margin: 4px 0 24px;
+      }
+      @media (min-width: 680px) {
+        .hub-grid {
+          grid-template-columns: repeat(4, 1fr);
+          max-width: 860px;
+          gap: 24px;
+        }
+      }
+
+      .hub-card {
+        background: white;
+        border: 2px solid #e4d0d0;
+        border-radius: 20px;
+        padding: 24px 14px 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+        cursor: pointer;
+        transition:
+          transform 0.25s,
+          box-shadow 0.25s,
+          border-color 0.25s;
+        box-shadow: 0 4px 16px rgba(90, 24, 24, 0.06);
+        animation: hub-pop 0.55s both;
+      }
+      .hub-card:nth-child(1) {
+        animation-delay: 0.08s;
+      }
+      .hub-card:nth-child(2) {
+        animation-delay: 0.18s;
+      }
+      .hub-card:nth-child(3) {
+        animation-delay: 0.28s;
+      }
+      .hub-card:nth-child(4) {
+        animation-delay: 0.38s;
+      }
+      .hub-card:hover {
+        transform: translateY(-7px) scale(1.04);
+        box-shadow: 0 16px 32px rgba(90, 24, 24, 0.18);
+        border-color: var(--accent-maroon);
+      }
+      .hub-card svg {
+        width: 70px;
+        height: 70px;
+        stroke: var(--accent-maroon);
+        fill: none;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        transition: transform 0.3s;
+      }
+      .hub-card:hover svg {
+        transform: scale(1.12) rotate(-4deg);
+      }
+      .hub-label {
+        font-family: "Georgia", serif;
+        font-style: italic;
+        font-size: 12.5pt;
+        color: var(--accent-maroon);
+        text-align: center;
+      }
+
+      /* ── GALLERY ── */
+      .gallery-container {
+        width: 100%;
+        max-width: 1100px;
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      .polaroid {
+        background: white;
+        padding: 20px 20px 45px 20px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+        display: inline-block;
+        margin: 20px;
+        width: 330px;
+        vertical-align: top;
+        transform: rotate(-1.5deg);
+        transition:
+          transform 0.3s,
+          box-shadow 0.3s;
+        animation: fadeInUp 0.6s both;
+      }
+      .polaroid:nth-child(even) {
+        transform: rotate(2.5deg);
+        animation-delay: 0.15s;
+      }
+      .polaroid:nth-child(3) {
+        animation-delay: 0.3s;
+      }
+      .polaroid:hover {
+        transform: rotate(0deg) scale(1.04);
+        box-shadow: 0 22px 44px rgba(0, 0, 0, 0.32);
+        z-index: 15;
+      }
+      .polaroid img {
+        width: 100%;
+        height: 290px;
+        object-fit: cover;
+        border: 1px solid #eee;
+      }
+      .polaroid .caption {
+        font-family: var(--font-serif);
+        font-style: italic;
+        color: #333;
+        margin-top: 16px;
+        font-size: 13pt;
+        text-align: center;
+      }
+
+      .photostrip {
+        background: white;
+        padding: 16px 16px 35px 16px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+        display: inline-block;
+        margin: 20px;
+        width: 210px;
+        vertical-align: top;
+        transform: rotate(1deg);
+        animation: fadeInUp 0.6s 0.2s both;
+        transition: transform 0.3s;
+      }
+      .photostrip:hover {
+        transform: rotate(0deg) scale(1.03);
+      }
+      .photostrip img {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+        margin-bottom: 10px;
+        border: 1px solid #eee;
+        display: block;
+      }
+      .photostrip img:last-of-type {
+        margin-bottom: 0;
+      }
+
+      /* ── ABOUT ── */
+      .about-layout {
+        width: 100%;
+        max-width: 1100px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 50px;
+        margin-top: 10px;
+      }
+      @media (max-width: 900px) {
+        .about-layout {
+          flex-direction: column;
+          gap: 30px;
+        }
+      }
+
+      .center-flower-box {
+        width: 400px;
+        height: 400px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .center-flower-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+
+      .bubbles-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+        max-width: 650px;
+      }
+      .bubble {
+        background-color: var(--accent-maroon);
+        color: white;
+        padding: 15px 25px;
+        border-radius: 30px;
+        font-size: 12.5pt;
+        line-height: 1.4;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        text-align: center;
+        animation: fadeInUp 0.5s both;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+      .bubble:hover {
+        transform: scale(1.07) translateY(-2px);
+        box-shadow: 0 10px 22px rgba(90, 24, 24, 0.22);
+      }
+
+      /* ── VIDEO ── */
+      .video-container {
+        max-width: 760px;
+        width: 100%;
+        margin: 10px auto;
+        border: 8px solid #240f10;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 20px 45px rgba(0, 0, 0, 0.55);
+        aspect-ratio: 16/9;
+        animation: fadeIn 0.8s 0.3s both;
+      }
+      .video-container iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+      }
+
+      /* ── LETTER ── */
+      .letter-container {
+        max-width: 800px;
+        width: 100%;
+        background: #fff;
+        padding: 55px 45px;
+        border-radius: 15px;
+        box-shadow: 0 15px 40px rgba(90, 24, 24, 0.04);
+        border-left: 6px solid var(--accent-maroon);
+        animation: fadeInUp 0.7s 0.2s both;
+      }
+      .letter-text {
+        font-size: 13pt;
+        line-height: 1.8;
+        text-align: justify;
+        white-space: pre-line;
+        color: #3a1919;
+        font-family: "Courier New", Courier, monospace;
+      }
+
+      /* ── CONFETTI ── */
+      .confetti-piece {
+        position: fixed;
+        width: 8px;
+        height: 8px;
+        border-radius: 2px;
+        animation: confetti-fall linear forwards;
+        pointer-events: none;
+        z-index: 9999;
+      }
+
+      /* ── ENTRY ANIMATIONS (re-triggered on screen change) ── */
+      .anim-1 {
+        animation: fadeInUp 0.6s 0.05s both;
+      }
+      .anim-2 {
+        animation: fadeInUp 0.6s 0.18s both;
+      }
+      .anim-3 {
+        animation: fadeInUp 0.6s 0.32s both;
+      }
+      .anim-4 {
+        animation: fadeInUp 0.6s 0.45s both;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Background music autoplay (hidden) -->
+    <iframe
+      id="bg-music"
+      src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&loop=1&playlist=dQw4w9WgXcQ&controls=0&mute=0"
+      allow="autoplay; encrypted-media"
+      style="display: none"
+    ></iframe>
+
+    <div id="app">
+      <!-- ══════ SCREEN: WELCOME ══════ -->
+      <div id="screen-welcome" class="screen active bg-pattern-light">
+        <div class="welcome-flex">
+          <div style="animation: floatY 4s ease-in-out infinite">
+            <img
+              src="image/birthday cake.png"
+              alt="Birthday Cake"
+              class="cake-art"
+              style="animation: none"
+            />
+          </div>
+          <div style="text-align: left">
+            <h1 class="title-handwritten" style="text-align: left">
+              Happy Birthday
+            </h1>
+            <p class="subtitle-italic" style="text-align: left">
+              do you want to see your gift
+            </p>
+            <div class="btn-container" style="text-align: left">
+              <button class="btn" onclick="startJourney()">yes!!!</button>
+              <button class="btn" onclick="toggleSadOverlay(true)">
+                nooo :([
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div id="sad-overlay-container" class="sad-overlay bg-pattern-dark">
+          <span class="sad-emoji">🥺</span>
+          <h1 class="title-handwritten" style="color: white; font-size: 34pt">
+            I promise you'll like it :(
+          </h1>
+          <div class="btn-container">
+            <button
+              class="btn"
+              style="
+                background-color: var(--accent-light);
+                color: var(--accent-maroon);
+              "
+              onclick="toggleSadOverlay(false)"
+            >
+              try again
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════ SCREEN: HUB ══════ -->
+      <div id="screen-hub" class="screen bg-pattern-light">
+        <h2 class="title-handwritten anim-1">for you, with love ✨</h2>
+        <p class="subtitle-italic anim-2">pilih yang mana dulu?</p>
+
+        <div class="hub-grid">
+          <!-- Memories -->
+          <div class="hub-card" onclick="goToScreen('screen-memories')">
+            <svg viewBox="0 0 80 80">
+              <rect x="8" y="16" width="36" height="46" rx="3" />
+              <rect x="8" y="16" width="36" height="28" rx="2" />
+              <path d="M12 50 l8-8 6 6 8-10 6 12" stroke-width="1.8" />
+              <circle cx="38" cy="26" r="4" />
+              <rect
+                x="26"
+                y="26"
+                width="36"
+                height="42"
+                rx="3"
+                fill="white"
+                stroke="#5a1818"
+              />
+              <rect x="26" y="26" width="36" height="26" rx="2" />
+              <path d="M30 58 l8-8 6 6 8-9 6 11" stroke-width="1.8" />
+              <circle cx="54" cy="36" r="4" />
+            </svg>
+            <span class="hub-label">Our Memories</span>
+          </div>
+          <!-- About -->
+          <div class="hub-card" onclick="goToScreen('screen-about')">
+            <svg viewBox="0 0 80 80">
+              <ellipse cx="40" cy="24" rx="10" ry="13" />
+              <ellipse
+                cx="25"
+                cy="29"
+                rx="9"
+                ry="12"
+                transform="rotate(-22 25 29)"
+              />
+              <ellipse
+                cx="55"
+                cy="29"
+                rx="9"
+                ry="12"
+                transform="rotate(22 55 29)"
+              />
+              <path d="M31 43 C31 43 36 68 40 68 C44 68 49 43 49 43" />
+              <path d="M30 44 C22 47 18 53 20 59 C26 59 31 54 32 47" />
+              <path d="M50 44 C58 47 62 53 60 59 C54 59 49 54 48 47" />
+              <path d="M27 43 C34 46 46 46 53 43" stroke-width="2.5" />
+              <circle cx="40" cy="24" r="4" fill="#5a1818" stroke="none" />
+              <circle cx="25" cy="28" r="3" fill="#5a1818" stroke="none" />
+              <circle cx="55" cy="28" r="3" fill="#5a1818" stroke="none" />
+            </svg>
+            <span class="hub-label">About You</span>
+          </div>
+          <!-- Music -->
+          <div class="hub-card" onclick="goToScreen('screen-music')">
+            <svg viewBox="0 0 80 80">
+              <rect x="10" y="30" width="60" height="38" rx="6" />
+              <path d="M10 30 Q40 12 70 30" fill="none" />
+              <circle cx="34" cy="49" r="13" />
+              <circle cx="34" cy="49" r="7.5" />
+              <circle cx="34" cy="49" r="2.5" fill="#5a1818" stroke="none" />
+              <rect x="56" y="38" width="8" height="6" rx="2" />
+              <line x1="60" y1="44" x2="60" y2="62" />
+            </svg>
+            <span class="hub-label">Our Song</span>
+          </div>
+          <!-- Letter -->
+          <div class="hub-card" onclick="goToScreen('screen-message')">
+            <svg viewBox="0 0 80 80">
+              <rect x="10" y="22" width="60" height="42" rx="5" />
+              <path d="M10 26 L40 48 L70 26" />
+              <path d="M10 64 L28 46" />
+              <path d="M70 64 L52 46" />
+              <path
+                d="M33 34 C33 30 40 30 40 34 C40 30 47 30 47 34 C47 39 40 43 40 43 C40 43 33 39 33 34Z"
+                fill="#5a1818"
+                stroke="none"
+              />
+            </svg>
+            <span class="hub-label">My Letter</span>
+          </div>
+        </div>
+
+        <div class="btn-container anim-4">
+          <button class="btn btn-back" onclick="goToScreen('screen-welcome')">
+            back
+          </button>
+        </div>
+      </div>
+
+      <!-- ══════ SCREEN: MEMORIES ══════ -->
+      <div id="screen-memories" class="screen dark bg-pattern-dark">
+        <h2 class="title-handwritten anim-1">Our Memories</h2>
+        <p class="subtitle-italic anim-2">
+          Setiap lembar cerita berharga bersamamu
+        </p>
+        <div class="gallery-container anim-3" id="gallery-wrapper"></div>
+        <div class="btn-container anim-4">
+          <button class="btn btn-back" onclick="goToScreen('screen-hub')">
+            back
+          </button>
+        </div>
+      </div>
+
+      <!-- ══════ SCREEN: ABOUT ══════ -->
+      <div id="screen-about" class="screen bg-pattern-light">
+        <h2 class="title-handwritten anim-1">about youu</h2>
+        <p class="subtitle-italic anim-2">
+          Hal-hal kecil indah yang melekat padamu
+        </p>
+        <div class="about-layout anim-3">
+          <div class="center-flower-box">
+            <img src="image/flower.png" alt="flower" />
+          </div>
+          <div class="bubbles-container" id="bubbles-wrapper"></div>
+        </div>
+        <div class="btn-container anim-4">
+          <button class="btn btn-back" onclick="goToScreen('screen-hub')">
+            back
+          </button>
+        </div>
+      </div>
+
+      <!-- ══════ SCREEN: MUSIC ══════ -->
+      <div id="screen-music" class="screen dark bg-pattern-dark">
+        <h2 class="title-handwritten anim-1">
+          This song reminds me of you ^0^
+        </h2>
+        <p class="subtitle-italic anim-2">
+          Putar nadanya sebelum melangkah ke halaman akhir
+        </p>
+        <div class="video-container">
+          <iframe
+            id="yt-player"
+            width="100%"
+            height="100%"
+            src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=0&controls=1"
+            allow="
+              accelerometer;
+              autoplay;
+              clipboard-write;
+              encrypted-media;
+              gyroscope;
+              picture-in-picture;
+            "
+            allowfullscreen
+          ></iframe>
+        </div>
+        <div class="btn-container anim-4">
+          <button class="btn btn-back" onclick="goToScreen('screen-hub')">
+            back
+          </button>
+        </div>
+      </div>
+
+      <!-- ══════ SCREEN: LETTER ══════ -->
+      <div id="screen-message" class="screen bg-pattern-light">
+        <h2 class="title-handwritten anim-1">My message to youu</h2>
+        <p class="subtitle-italic anim-2">
+          surat tulus kecil dari lubuk hatiku
+        </p>
+        <div class="letter-container">
+          <div class="letter-text" id="text-long-message"></div>
+        </div>
+        <div class="btn-container anim-4" style="margin-bottom: 30px">
+          <button class="btn btn-back" onclick="goToScreen('screen-hub')">
+            back
+          </button>
+          <button
+            class="btn"
+            onclick="
+              goToScreen('screen-welcome');
+              launchConfetti();
+            "
+          >
+            Restart 🤍
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const BIRTHDAY_DATA = {
+        memories: [
+          {
+            type: "polaroid",
+            caption: "Momen kondangan bareng kamu 🤍",
+            images: [
+              "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=600&auto=format&fit=crop&q=80",
+            ],
+          },
+          {
+            type: "photostrip",
+            images: [
+              "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400&auto=format&fit=crop&q=80",
+              "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=400&auto=format&fit=crop&q=80",
+              "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80",
+            ],
+          },
+          {
+            type: "polaroid",
+            caption: "Waktu kita main ke pantai seru 🌊",
+            images: [
+              "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&auto=format&fit=crop&q=80",
+            ],
+          },
+        ],
+        compliments: [
+          "you are kind to everyone 🤍",
+          "you overthink sometimes, but it's because you care",
+          "you don't give up easily",
+          "you have a soft heart but also really strong",
+          "you have your own unique way of making people happy",
+          "your smile can change someone's mood instantly",
+          "you care more than people realize",
+          "you're loved more than you think ✨",
+        ],
+        longMessage: `happy birthday my loovee-!!
+      it's your special dayy, wish you all the best ya pacarkuu 🤍 maafff yaaa kalau sampai sekarang akuu belumm bisaa kasih hal yang wow buat kamuuu, maafff juga kalau akuuu masii banyak kurangnyaa dan belumm jadi yang terbaik. but trust me, i always try my best for u.
+
+      selamatt bertambah usiaa pacarkuuu, semogaaa di umur kamu sekarang kamu makin dewasa, makin bahagia, makin disayang banyak orang, dan tentu aja makin sayang sama keluargaa dan akuu jugaa xixixi. pacarkuu yang satu inii hebattt bangettt, kamu udah lewatin banyak hal sampai bisa ada di titik sekarang. mungkin orang lain ga semuanya tau perjuangan kamu, tapi aku tau kamu sekuat itu. dan aku bangga banget punya kamu.
+
+      do you know? god loves you so much, jadi jangan pernah ngerasa sendiri yaa. kalau dunia lagi capekiin kamu, kalau pikiran lagi rame, inget masih ada aku yang selalu dukung kamu dan peduli sama kamu. i looovee yoooouuu 💐✨
+
+      makasih yaa udah lahir ke dunia ini, makasih udah tumbuh jadi orang sebaik kamu, makasih udah bertahan di hari-hari yang ga gampang, dan makasih juga udah hadir di hidup aku. kamu tuh salah satu hal baik yang pernah aku temuin. di umur kamu yang baru ini, aku cuma mau doa yang baik-baik buat kamu. semoga langkah kamu selalu dipermudah, rezeki kamu dilancarin, hari kamu selalu tenang, dan semua yang kamu pengenin bisa pelan-pelan tercapai.
+
+      tetep jadi kamu yang aku kenal yaa, yang baik, yang tulus, yang kadang nyebelin tapi selalu bikin kangen. happy birthday once again my lovee 🤍 i'm really grateful to have youu.`,
+      };
+
+      function setupWebsite() {
+        // Gallery
+        const gw = document.getElementById("gallery-wrapper");
+        BIRTHDAY_DATA.memories.forEach((item) => {
+          if (item.type === "polaroid") {
+            gw.innerHTML += `<div class="polaroid"><img src="${item.images[0]}" alt="Memory"><div class="caption">${item.caption || ""}</div></div>`;
+          } else {
+            gw.innerHTML += `<div class="photostrip">${item.images.map((s) => `<img src="${s}">`).join("")}</div>`;
+          }
+        });
+        // Bubbles
+        const bw = document.getElementById("bubbles-wrapper");
+        BIRTHDAY_DATA.compliments.forEach((text, i) => {
+          const b = document.createElement("div");
+          b.className = "bubble";
+          b.style.animationDelay = i * 0.07 + "s";
+          b.innerText = text;
+          bw.appendChild(b);
+        });
+        // Letter
+        document.getElementById("text-long-message").innerText =
+          BIRTHDAY_DATA.longMessage;
+      }
+
+      function goToScreen(screenId) {
+        const curr = document.querySelector(".screen.active");
+        const next = document.getElementById(screenId);
+        if (!next || curr === next) return;
+        curr.style.opacity = "0";
+        setTimeout(() => {
+          curr.classList.remove("active");
+          curr.style.display = "none";
+          next.style.display = "flex";
+          next.offsetWidth;
+          next.classList.add("active");
+          next.style.opacity = "1";
+          next.scrollTop = 0;
+          // re-trigger entry animations
+          next
+            .querySelectorAll(".anim-1,.anim-2,.anim-3,.anim-4")
+            .forEach((el) => {
+              el.style.animation = "none";
+              el.offsetWidth;
+              el.style.animation = "";
+            });
+          // Music screen: load video & mute bg music
+          if (screenId === "screen-music") {
+            document.getElementById("yt-player").src =
+              "https://www.youtube.com/embed/OiwtQDRpl7U?si=EzIg-sjtffB59Qsj";
+            muteBgMusic(true);
+          } else {
+            document.getElementById("yt-player").src = "";
+            muteBgMusic(false);
+          }
+        }, 400);
+      }
+
+      function muteBgMusic(mute) {
+        const bg = document.getElementById("bg-music");
+        if (!bg) return;
+        const base =
+          "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&loop=1&playlist=dQw4w9WgXcQ&controls=0";
+        bg.src = base + (mute ? "&mute=1" : "&mute=0");
+      }
+
+      function startJourney() {
+        launchConfetti();
+        goToScreen("screen-hub");
+      }
+
+      function toggleSadOverlay(show) {
+        document.getElementById("sad-overlay-container").style.display = show
+          ? "flex"
+          : "none";
+      }
+
+      function launchConfetti() {
+        const colors = [
+          "#5a1818",
+          "#c97777",
+          "#f9c4c4",
+          "#ffffff",
+          "#e8b4b8",
+          "#a84444",
+        ];
+        for (let i = 0; i < 60; i++) {
+          const el = document.createElement("div");
+          el.className = "confetti-piece";
+          el.style.left = Math.random() * 100 + "vw";
+          el.style.top = "-10px";
+          el.style.background =
+            colors[Math.floor(Math.random() * colors.length)];
+          el.style.width = 6 + Math.random() * 8 + "px";
+          el.style.height = 6 + Math.random() * 8 + "px";
+          el.style.borderRadius = Math.random() > 0.5 ? "50%" : "2px";
+          el.style.animationDuration = 1.6 + Math.random() * 2.4 + "s";
+          el.style.animationDelay = Math.random() * 0.7 + "s";
+          document.body.appendChild(el);
+          setTimeout(() => el.remove(), 4500);
+        }
+      }
+
+      window.onload = setupWebsite;
+    </script>
+  </body>
+</html>
